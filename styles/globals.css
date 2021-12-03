@@ -2,7 +2,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Dancing Script', cursive;
+  font-family: "Dancing Script", cursive;
 }
 
 a {
@@ -15,5 +15,22 @@ a {
 }
 
 .fontFamily {
-  font-family: 'Dancing Script', cursive;
+  font-family: "Dancing Script", cursive;
+}
+.Toastify__toast-theme--light {
+  background-image: linear-gradient(
+    to right top,
+    #1db9ff,
+    #a2a0ff,
+    #fb7ad4,
+    #ff677a,
+    #f48603
+  ) !important;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.Toastify__toast-body {
+  color: white;
+  font-family: "Dancing Script";
 }

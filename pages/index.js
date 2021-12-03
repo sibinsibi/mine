@@ -1,7 +1,56 @@
 // import Head from 'next/head'
 import styles from "../styles/Login.module.css";
+import { useState, useRef } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Login() {
+  
+  const [hideRegister, showRegister] = useState(false);
+
+  const toggleForm = () => {
+    showRegister(!hideRegister);
+  };
+
+  const [allValues, setAllValues] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const changeHandler = (e) => {
+    setAllValues((prevValues) => {
+      return { ...prevValues, [e.target.name]: e.target.value };
+    });
+  };
+
+  const showError = (msg) => {
+    toast.error(msg, {
+      toastId: msg,
+      position: toast.POSITION.BOTTOM_CENTER,
+    });
+  };
+
+  const signIn = async () => {
+    if (!allValues.email) {
+      showError("Enter an email");
+      return;
+    }
+    if (!(await validateEmail(allValues.email))) {
+      showError("Incorrect email format");
+      return;
+    }
+    if (!allValues.password) {
+      showError("Enter password");
+      return;
+    }
+  };
+
+  const validateEmail = (email) => {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  };
+
   return (
     // <div className={styles.container}>
     //   <Head>
@@ -12,48 +61,87 @@ export default function Login() {
 
     // </div>
     <>
-    <div className={styles.loginpage}>
-      <div className={styles.container}>
-        <div className={styles.box}>
-          <img src="/img/logo.png" className={styles.logo} />
+      <div className={styles.loginpage}>
+        <div className={styles.container}>
+          <div className={styles.box}>
+            <img src="/img/logo.png" className={styles.logo} />
 
-          <h2 className={styles.logotext}>Mine</h2>
-          <form className={styles.loginForm}>
-            <div className={styles.inputBox}>
-              <input type="text" required />
-              <label>Email</label>
-            </div>
-            <div className={styles.inputBox}>
-              <input type="password" required />
-              <label>Password</label>
-            </div>
-            <div className={styles.inputBox}>
-              <input type="password" required />
-              <label>Confirm Password</label>
-            </div>
-            <button
-              type="button"
-              className={styles.loginButton}
-              value="Sign in"
-            >
-              Sign in
-            </button>
-            <button
-              type="button"
-              className={styles.loginButton}
-              value="Sign up"
-            >
-              Sign up
-            </button>
-            <br />
-            <img src="~/assets/img/add-user.png" className={styles.logo1} />
-            <img src="~/assets/img/login-user.png" className={styles.logo1} />
-            <img src="~/assets/img/google.png" className={styles.logo1} />
-          </form>
-          <h1 className={styles.descryption}>Personalise Your Memories</h1>
+            <h2 className={styles.logotext}>Mine</h2>
+            <form className={styles.loginForm}>
+              <div className={styles.inputBox}>
+                <input
+                  type="text"
+                  name="email"
+                  required
+                  onChange={changeHandler}
+                  autoComplete="off"
+                />
+                <label>Email</label>
+              </div>
+              <div className={styles.inputBox}>
+                <input
+                  type="password"
+                  name="password"
+                  required
+                  autoComplete="off"
+                  onChange={changeHandler}
+                />
+                <label>Password</label>
+              </div>
+              {hideRegister ? (
+                <div className={styles.inputBox}>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    required
+                    autoComplete="off"
+                    onChange={changeHandler}
+                  />
+                  <label>Confirm Password</label>
+                </div>
+              ) : (
+                ""
+              )}
+
+              {hideRegister ? (
+                <button
+                  type="button"
+                  className={styles.loginButton}
+                  value="Sign up"
+                  onClick={signIn}
+                >
+                  Sign up
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className={styles.loginButton}
+                  value="Sign in"
+                  onClick={signIn}
+                >
+                  Sign in
+                </button>
+              )}
+              <br />
+              {hideRegister ? (
+                <img
+                  src="img/login-user.png"
+                  className={styles.logo1}
+                  onClick={toggleForm}
+                />
+              ) : (
+                <img
+                  src="/img/add-user.png"
+                  className={styles.logo1}
+                  onClick={toggleForm}
+                />
+              )}
+            </form>
+            <h1 className={styles.descryption}>Personalise Your Memories</h1>
+          </div>
         </div>
       </div>
-    </div>
+      <ToastContainer />
     </>
   );
 }

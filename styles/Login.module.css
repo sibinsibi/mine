@@ -4,6 +4,7 @@
 .logo1 {
   width: 15%;
   margin: 10% 3%;
+  cursor: pointer;
 }
 .fa-user-plus {
   line-height: 3;
@@ -42,6 +43,8 @@
   border-bottom: 1px solid #fff;
   outline: none;
   background: transparent;
+  font-family: 'Dancing Script';
+
 }
 .box .inputBox label {
   position: absolute;

@@ -22,6 +22,7 @@ class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap"
             rel="stylesheet"
           />
+          
         </Head>
         <body className="body">
           <Main />
