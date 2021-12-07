@@ -1,11 +1,13 @@
 // import Head from 'next/head'
+import React from "react";
 import styles from "../styles/Login.module.css";
 import { useState, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 export default function Login() {
-  
   const [hideRegister, showRegister] = useState(false);
+
+  let password = React.createRef();
 
   const toggleForm = () => {
     showRegister(!hideRegister);
@@ -18,6 +20,7 @@ export default function Login() {
   });
 
   const changeHandler = (e) => {
+    if (e.target.name === "password") checkPasswordStrength();
     setAllValues((prevValues) => {
       return { ...prevValues, [e.target.name]: e.target.value };
     });
@@ -29,6 +32,71 @@ export default function Login() {
       position: toast.POSITION.BOTTOM_CENTER,
     });
   };
+
+  var strength = {
+    0: "Worst ☹",
+    1: "Bad 😃",
+    2: "Weak 😁",
+    3: "Good 👌",
+    4: "Strong 👍",
+  };
+
+  let strengthMsg = {
+    strength: "",
+    warning: "",
+    suggestions: "",
+  };
+
+  const [feedbackValues, setFeedbackValues] = useState({
+    strength: "",
+    warning: "",
+    warning: "",
+    score: 0
+  });
+
+  const checkPasswordStrength = () => {
+    let val = password.current.value;
+    let result = zxcvbn(val);
+
+    if (val !== "") {
+      // strengthMsg.strength = strength[result.score];
+      // strengthMsg.warning = result.feedback.warning;
+      // strengthMsg.suggestions = result.feedback.suggestions;
+      setFeedbackValues((prevState) => ({
+        ...prevState,
+        strength: strength[result.score],
+        score: result.score
+      }));
+    } 
+  };
+
+  // var password = document.getElementById("password");
+  // var meter = document.getElementById("password-strength-meter");
+  // var text = document.getElementById("password-strength-text");
+
+  // password.addEventListener("input", function () {
+  //   var val = password.value;
+  //   var result = zxcvbn(val);
+
+  //   // Update the password strength meter
+  //   meter.value = result.score;
+
+  //   // Update the text indicator
+  //   if (val !== "") {
+  //     text.innerHTML =
+  //       "Strength: " +
+  //       "<strong>" +
+  //       strength[result.score] +
+  //       "</strong>" +
+  //       "<span class='feedback'>" +
+  //       result.feedback.warning +
+  //       " " +
+  //       result.feedback.suggestions +
+  //       "</span";
+  //   } else {
+  //     text.innerHTML = "";
+  //   }
+  // });
 
   const signIn = async () => {
     if (!allValues.email) {
@@ -85,9 +153,21 @@ export default function Login() {
                   required
                   autoComplete="off"
                   onChange={changeHandler}
+                  ref={password}
                 />
                 <label>Password</label>
+                {allValues.password.length ? (
+                  <div>
+                    <meter max="4" id="password-strength-meter"></meter>
+                    <span className={styles.passwordStrength}>
+                      Strength: {feedbackValues.strength}
+                    </span>
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
+
               {hideRegister ? (
                 <div className={styles.inputBox}>
                   <input
